@@ -1,5 +1,7 @@
 [TOC]
 
+切记：不支持fabric-1.4.4版本
+
 此文件夹中的链码程序均为fabric源码中的example程序！更加详细的链码介绍，请看源码！
 
 # 生成组织结构和证书文件
@@ -34,4 +36,18 @@ docker-compose -f docker-compose-cli.yaml down
 ```
 docker volume prune -f  # 清理挂载卷
 docker network prune -f # 来清理没有再被任何容器引用的networks
+```
+
+```
+rm -f ./fixtures/channel-artifacts/*
+rm -rf ./fixtures/crypto-config
+```
+
+```
+cd fixtures
+cryptogen generate  --config ./crypto-config.yaml  --output  crypto-config
+export FABRIC_CFG_PATH=$PWD
+export CHANNEL_NAME=mychannel
+configtxgen  -profile TwoOrgsOrdererGenesis  -outputBlock ./channel-artifacts/genesis.block
+configtxgen  -profile TwoOrgsChannel -outputCreateChannelTx  ./channel-artifacts/mychannel.tx  -channelID $CHANNEL_NAME
 ```
